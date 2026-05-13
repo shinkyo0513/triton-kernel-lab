@@ -28,7 +28,7 @@ def do_testing(
 
     torch.cuda.synchronize()
     
-    total_ms = start.elapsed(end) 
+    total_ms = start.elapsed_time(end) 
     return total_ms / repeat
 
 def bench_vector_add():
