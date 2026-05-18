@@ -6,8 +6,8 @@ import triton.language as tl
 def rowwise_sum_kernel(
     x_ptr,
     out_ptr,
-    M: tl.constexpr,
-    N: tl.constexpr,
+    M,
+    N,
     BLOCK_SIZE: tl.constexpr
 ):
     row_idx = tl.program_id(axis=0)
@@ -31,8 +31,12 @@ def rowwise_sum(x: torch.Tensor, block_size: int = 1024) -> torch.Tensor:
     assert x.is_contiguous(), "Input must be contiguous"
     
     nrows, ncols = x.shape
-    assert block_size >= ncols, "For this simple version, block_size must be >= N"
-    assert block_size & (block_size - 1) == 0, "block_size must be the power of 2"
+    assert ncols > 0, \
+        f"For this simple version, block_size must be > 0"
+    assert ncols <= block_size, \
+        f"For this simple version, block_size ({block_size}) must be >= N ({ncols})"
+    assert block_size & (block_size - 1) == 0, \
+        f"block_size ({block_size}) must be the power of 2"
 
     out = torch.empty((nrows,), device=x.device, dtype=x.dtype)
 
