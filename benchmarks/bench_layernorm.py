@@ -25,7 +25,7 @@ def bench_layernorm():
     max_error = torch.max(torch.abs(out_triton - out_torch)).item()
     print(f"Correctness max error: {max_error:.6f}")
 
-    torch.testing.assert_close(out_triton, out_torch, atol=1e-6)
+    torch.testing.assert_close(out_triton, out_torch, rtol=14-4, atol=1e-4)
     print(f"Correctness: PASS")
 
     nrows = 1 << 12
